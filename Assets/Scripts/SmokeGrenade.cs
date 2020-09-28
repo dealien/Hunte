@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 public class SmokeGrenade : MonoBehaviour
@@ -13,12 +12,10 @@ public class SmokeGrenade : MonoBehaviour
     private Vector3 m_ThrowDirection;
     private ParticleSystem m_ParticleSystem;
     private Rigidbody m_Rigidbody;
-    private Transform projectile;
     private Vector3 target;
     private float throwingAngle;
     private float gravity;
-    private bool thrown = false;
-    private bool stopping = false;
+    private bool stopping;
 
 
     void Start()
@@ -27,8 +24,6 @@ public class SmokeGrenade : MonoBehaviour
         var m = m_ParticleSystem.main;
         m.startDelay = fuseTime;
         m_Rigidbody = GetComponent<Rigidbody>();
-
-        projectile = gameObject.transform;
     }
 
 
@@ -48,9 +43,10 @@ public class SmokeGrenade : MonoBehaviour
     {
         target = tParams.target;
         throwingAngle = tParams.throwAngle;
-        gravity = tParams.gravity;
+        m_Rigidbody = GetComponent<Rigidbody>();
 
-        StartCoroutine(nameof(SimulateProjectile));
+        gravity = Mathf.Abs(Physics.gravity.y);
+        StartCoroutine(nameof(ThrowGrenade));
     }
 
 
@@ -58,12 +54,7 @@ public class SmokeGrenade : MonoBehaviour
     {
         var restoreColor = GUI.color;
         GUI.color = Color.green;
-        UnityEditor.Handles.Label(gameObject.transform.position, "IsPlaying = " + m_ParticleSystem.isPlaying);
-        if (!thrown)
-        {
-            Gizmos.DrawSphere(target, 0.1f); //TODO: Make the target sphere stop rendering when the throw is complete
-        }
-
+        Handles.Label(gameObject.transform.position, "IsPlaying = " + m_ParticleSystem.isPlaying);
         GUI.color = restoreColor;
     }
 
@@ -77,21 +68,21 @@ public class SmokeGrenade : MonoBehaviour
         Debug.Log("Destroyed grenade object.");
     }
 
-    IEnumerator SimulateProjectile()
+
+    IEnumerator ThrowGrenade()
     {
-        Debug.Log("Beginning projectile throw simulation.");
+        Debug.Log("Throwing projectile...");
+        Debug.Log("Gravity: " + Physics.gravity + "(" + gravity + ")");
 
         // Short delay added before Projectile is thrown
         //yield return new WaitForSeconds(1.5f);
 
-        // Move projectile to the position of throwing object + add some offset if needed.
-        var position = transform.position;
-        var projectilePosition = position + new Vector3(0, 0.0f, 0);
-        Debug.Log(projectilePosition);
+        var projectilePosition = transform.position;
+        Debug.Log("Current position: " + projectilePosition);
 
         // Calculate distance to target
-        float targetDistance = Vector3.Distance(position, target);
-        Debug.Log(targetDistance);
+        float targetDistance = Vector3.Distance(projectilePosition, target);
+        Debug.Log("Distance to target: " + targetDistance);
 
         // Calculate the velocity needed to throw the object to the target at specified angle.
         float projectileVelocity = targetDistance / (Mathf.Sin(2 * throwingAngle * Mathf.Deg2Rad) / gravity);
@@ -100,23 +91,11 @@ public class SmokeGrenade : MonoBehaviour
         float vx = Mathf.Sqrt(projectileVelocity) * Mathf.Cos(throwingAngle * Mathf.Deg2Rad);
         float vy = Mathf.Sqrt(projectileVelocity) * Mathf.Sin(throwingAngle * Mathf.Deg2Rad);
 
-        // Calculate flight time.
-        float flightDuration = targetDistance / vx;
-
-        // Rotate projectile to face the target.
+        // Rotate projectile to face the target
         transform.rotation = Quaternion.LookRotation(target - projectilePosition);
+        var rotationToTarget = Quaternion.AngleAxis(transform.rotation.eulerAngles.y, Vector3.up) * Vector3.forward;
 
-        float elapseTime = 0;
-
-        while (elapseTime < flightDuration)
-        {
-            transform.Translate(0, (vy - (gravity * elapseTime)) * Time.deltaTime, vx * Time.deltaTime);
-            elapseTime += Time.deltaTime;
-            yield return null;
-        }
-
-        Debug.Log("Throw simulation complete.");
-        thrown = true;
-        m_Rigidbody.useGravity = true;
+        m_Rigidbody.velocity = (vx * rotationToTarget) + (vy * Vector3.up);
+        yield return null;
     }
 }

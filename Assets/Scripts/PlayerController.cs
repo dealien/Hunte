@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     public GameObject grenadeObject;
     public float grenadeTime = 3f;
     public float throwAngle = 45f;
-    public float throwGravity = 9.8f;
 
     private Animator m_Animator; // Reference to the animator component
     private Rigidbody m_Rigidbody;
@@ -98,7 +97,7 @@ public class PlayerController : MonoBehaviour
             Ray ray = new Ray(camTransform.position, camTransform.forward);
             Physics.Raycast(ray, out var raycastHit);
 
-            var m = new ThrowParameters(raycastHit.point, throwAngle, throwGravity);
+            var m = new ThrowParameters(raycastHit.point, throwAngle);
             grenade.BroadcastMessage("Throw", m);
 
 //            Debug.DrawRay(throwStart, m_ThrowDirection, Color.magenta, 3f);

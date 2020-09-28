@@ -8,10 +8,21 @@ public class ThrowParameters
     public float throwAngle;
     public float gravity;
 
-    public ThrowParameters(Vector3 t, float a, float g)
+    public ThrowParameters(Vector3 t, float a)
     {
         target = t;
         throwAngle = a;
-        gravity = g;
+    }
+}
+
+public class PlayerData
+{
+    public float health;
+
+
+    // TODO: Find out if there's a way to have the constructor parameters be the same as the properties they're setting so that it's clear what each property is when calling the constructor
+    public PlayerData(float h)
+    {
+        health = h;
     }
 }
