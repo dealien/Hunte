@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour
     {
         // Create a new vector of the horizontal and vertical inputs
         m_Movement = new Vector3(horizontal, 0f, vertical);
-        m_Movement = Camera.main.transform.TransformDirection(m_Movement);
+        m_Movement = cam.transform.TransformDirection(m_Movement);
         m_Movement.y = 0.0f;
         m_Movement.Normalize();
 
