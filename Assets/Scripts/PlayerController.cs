@@ -97,7 +97,6 @@ public class PlayerController : MonoBehaviour
             Physics.IgnoreCollision(m_Collider, grenade.GetComponent<Collider>());
             // grenade.GetComponent<Rigidbody>().velocity = transform.TransformDirection(m_ThrowDirection * throwVelocity);
 
-            // TODO: Make throw target raycast ignore player collisions
             var camTransform = cam.transform;
             m_Collider.enabled = false; // Disable player collider during grenade targeting
             Ray ray = new Ray(camTransform.position, camTransform.forward);
@@ -145,7 +144,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         timer += 1 * Time.deltaTime;
-
         if (timer >= grenadeTime) { canThrow = true; }
     }
 
