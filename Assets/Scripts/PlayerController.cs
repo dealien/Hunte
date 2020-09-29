@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        cam = GameObject.FindWithTag("CharacterCamera").GetComponent<Camera>();
     }
 
     void FixedUpdate()
