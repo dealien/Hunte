@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviour
         // Jumping
         if (Input.GetKey("space") && isGrounded)
         {
+            // TODO: Multilpy jump speed by gravity for easier jump height control
             m_Rigidbody.velocity += jumpSpeed * Vector3.up;
 
             isGrounded = false;
@@ -170,7 +171,7 @@ public class PlayerController : MonoBehaviour
     {
         // Create a new vector of the horizontal and vertical inputs
         m_Movement = new Vector3(horizontal, 0f, vertical);
-        m_Movement = cam.transform.TransformDirection(m_Movement);
+        if (!(cam is null)) m_Movement = cam.transform.TransformDirection(m_Movement);
         m_Movement.y = 0.0f;
         m_Movement.Normalize();
 
