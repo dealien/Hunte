@@ -1,7 +1,7 @@
 # Add 'repo' label to any root file changes
 repo:
-  any: ['./*']
+  any: ["./*"]
 
 scripting: 
-  any: ['*.cs']
+  any: ["*.cs"]
   
