@@ -47,8 +47,8 @@ public class ParticleSystemControllerWindow : MonoBehaviour
             includeChildren = GUILayout.Toggle(includeChildren, "Include Children");
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Time(" + system.time + ")");
-            GUILayout.Label("Particle Count(" + system.particleCount + ")");
+            GUILayout.Label($"Time({system.time})");
+            GUILayout.Label($"Particle Count({system.particleCount})");
             GUILayout.EndHorizontal();
         }
         else

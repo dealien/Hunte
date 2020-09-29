@@ -23,6 +23,7 @@ public class SmokeGrenade : MonoBehaviour
         m_ParticleSystem = smokeObject.GetComponent<ParticleSystem>();
         var m = m_ParticleSystem.main;
         m.startDelay = fuseTime;
+        m.duration = smokeDuration;
         m_Rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -54,7 +55,7 @@ public class SmokeGrenade : MonoBehaviour
     {
         var restoreColor = GUI.color;
         GUI.color = Color.green;
-        Handles.Label(gameObject.transform.position, "IsPlaying = " + m_ParticleSystem.isPlaying);
+        Handles.Label(gameObject.transform.position, $"IsPlaying = {m_ParticleSystem.isPlaying}\nTimer = {timer}\nEmitting = {!stopping}");
         GUI.color = restoreColor;
     }
 
@@ -72,17 +73,17 @@ public class SmokeGrenade : MonoBehaviour
     IEnumerator ThrowGrenade()
     {
         Debug.Log("Throwing projectile...");
-        Debug.Log("Gravity: " + Physics.gravity + "(" + gravity + ")");
+        Debug.Log($"Gravity: {Physics.gravity}({gravity})");
 
         // Short delay added before Projectile is thrown
         //yield return new WaitForSeconds(1.5f);
 
         var projectilePosition = transform.position;
-        Debug.Log("Current position: " + projectilePosition);
+        Debug.Log($"Current position: {projectilePosition}");
 
         // Calculate distance to target
         float targetDistance = Vector3.Distance(projectilePosition, target);
-        Debug.Log("Distance to target: " + targetDistance);
+        Debug.Log($"Distance to target: {targetDistance}");
 
         // Calculate the velocity needed to throw the object to the target at specified angle.
         float projectileVelocity = targetDistance / (Mathf.Sin(2 * throwingAngle * Mathf.Deg2Rad) / gravity);

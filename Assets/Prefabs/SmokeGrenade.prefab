@@ -127,7 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   smokeObject: {fileID: 7022092551686933863}
   fuseTime: 5
-  smokeDuration: 25
+  smokeDuration: 15
 --- !u!1001 &7023360762222753835
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -227,6 +227,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 198791558892717060, guid: 4b7a42ede78d2f1408715e9ec6430326,
+        type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198791558892717060, guid: 4b7a42ede78d2f1408715e9ec6430326,
+        type: 3}
+      propertyPath: lengthInSec
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b7a42ede78d2f1408715e9ec6430326, type: 3}

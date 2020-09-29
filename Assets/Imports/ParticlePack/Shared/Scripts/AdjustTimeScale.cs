@@ -25,7 +25,7 @@ public class AdjustTimeScale : MonoBehaviour
 
             if (textMesh != null)
             {
-                textMesh.text = "Time Scale : " + System.Math.Round(Time.timeScale, 2);
+                textMesh.text = $"Time Scale : {System.Math.Round(Time.timeScale, 2)}";
             }
           
         }
@@ -40,7 +40,7 @@ public class AdjustTimeScale : MonoBehaviour
 
             if (textMesh != null)
             {
-                textMesh.text = "Time Scale : " + System.Math.Round(Time.timeScale, 2);
+                textMesh.text = $"Time Scale : {System.Math.Round(Time.timeScale, 2)}";
             }
         }
     }

@@ -23,7 +23,7 @@ namespace DebugStuff
         {
             output = logString;
             stack = stackTrace;
-            myLog = output + "\n" + myLog;
+            myLog = $"{output}\n{myLog}";
             if (myLog.Length > 5000)
             {
                 myLog = myLog.Substring(0, 4000);
