@@ -12,16 +12,10 @@ public class ThrowSimulation : MonoBehaviour
     private Transform myTransform;
 
 
-    void Awake()
-    {
-        myTransform = transform;
-    }
+    void Awake() { myTransform = transform; }
 
 
-    void Start()
-    {
-        StartCoroutine(nameof(SimulateProjectile));
-    }
+    void Start() { StartCoroutine(nameof(SimulateProjectile)); }
 
 
     IEnumerator SimulateProjectile()

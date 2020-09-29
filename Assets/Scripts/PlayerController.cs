@@ -36,10 +36,9 @@ public class PlayerController : MonoBehaviour
         m_Collider = GetComponent<Collider>();
     }
 
-    void Start()
-    {
-        cam = GameObject.FindWithTag("CharacterCamera").GetComponent<Camera>();
-    }
+
+    void Start() { cam = GameObject.FindWithTag("CharacterCamera").GetComponent<Camera>(); }
+
 
     void FixedUpdate()
     {
@@ -112,19 +111,16 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    void OnGUI()
-    {
-        GUI.Label(new Rect(0, 0, 1000, 50), $"Distance to target: {raycastDist}");
-    }
+    void OnGUI() { GUI.Label(new Rect(0, 0, 1000, 50), $"Distance to target: {raycastDist}"); }
 
 
     void OnDrawGizmos()
     {
         var camTransform = cam.transform;
         var camPosition = camTransform.position;
-    
+
         m_Collider.enabled = false; // Prevent the raycast from colliding with the player object
-        
+
         Vector3 direction = camTransform.forward;
         Ray ray = new Ray(camPosition, direction);
         Debug.DrawRay(camPosition, direction);
@@ -136,37 +132,31 @@ public class PlayerController : MonoBehaviour
             Gizmos.color = Color.yellow;
             Gizmos.DrawSphere(raycastHit.point, 0.1f);
         }
-    
+
         m_Collider.enabled = true; // Reenable the player collider after the raycast
     }
-    
+
 
     void Update()
     {
         timer += 1 * Time.deltaTime;
 
-        if (timer >= grenadeTime)
-        {
-            canThrow = true;
-        }
+        if (timer >= grenadeTime) { canThrow = true; }
     }
 
-    void OnCollisionStay()
-    {
-        isGrounded = true;
-    }
+
+    void OnCollisionStay() { isGrounded = true; }
 
 
     /////////////////////////////////////////////CHARACTER MOVEMENT/////////////////////////////////////////
 
+
     void MovementManagement(float horizontal, float vertical)
     {
         // If there is some axis input...
-        if (horizontal != 0f || vertical != 0f)
-        {
-            Rotating(horizontal, vertical);
-        }
+        if (horizontal != 0f || vertical != 0f) { Rotating(horizontal, vertical); }
     }
+
 
     void Rotating(float horizontal, float vertical)
     {
@@ -183,6 +173,7 @@ public class PlayerController : MonoBehaviour
         m_Rotation = Quaternion.Lerp(GetComponent<Rigidbody>().rotation, m_TargetRotation,
             turnSmoothing * Time.deltaTime);
     }
+
 
     void OnAnimatorMove()
     {
