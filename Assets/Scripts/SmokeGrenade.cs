@@ -5,17 +5,17 @@ using UnityEngine;
 public class SmokeGrenade : MonoBehaviour
 {
     public GameObject smokeObject;
-    public float fuseTime = 5f;
-    public float smokeDuration = 15f;
+    public float      fuseTime      = 5f;
+    public float      smokeDuration = 15f;
 
-    private float timer;
-    private Vector3 m_ThrowDirection;
+    private float          timer;
+    private Vector3        m_ThrowDirection;
     private ParticleSystem m_ParticleSystem;
-    private Rigidbody m_Rigidbody;
-    private Vector3 target;
-    private float throwingAngle;
-    private float gravity;
-    private bool stopping;
+    private Rigidbody      m_Rigidbody;
+    private Vector3        target;
+    private float          throwingAngle;
+    private float          gravity;
+    private bool           stopping;
 
 
     void Start()
@@ -23,8 +23,8 @@ public class SmokeGrenade : MonoBehaviour
         m_ParticleSystem = smokeObject.GetComponent<ParticleSystem>();
         var m = m_ParticleSystem.main;
         m.startDelay = fuseTime;
-        m.duration = smokeDuration;
-        m_Rigidbody = GetComponent<Rigidbody>();
+        m.duration   = smokeDuration;
+        m_Rigidbody  = GetComponent<Rigidbody>();
     }
 
 
@@ -46,31 +46,30 @@ public class SmokeGrenade : MonoBehaviour
         {
             Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), GetComponent<Collider>());
         }
-
-
-        void Throw(ThrowParameters tParams)
-        {
-            target = tParams.target;
-            throwingAngle = tParams.throwAngle;
-            m_Rigidbody = GetComponent<Rigidbody>();
-
-            gravity = Mathf.Abs(Physics.gravity.y);
-            StartCoroutine(nameof(ThrowGrenade));
-        }
-
-
-        void OnDrawGizmos()
-        {
-            var restoreColor = GUI.color;
-            GUI.color = Color.green;
-            Handles.Label(gameObject.transform.position,
-                $"IsPlaying = {m_ParticleSystem.isPlaying}\nTimer = {timer}\nEmitting = {!stopping}");
-            GUI.color = restoreColor;
-        }
     }
 
 
-    private IEnumerator RemoveGrenade()
+    void Throw(ThrowParameters tParams)
+    {
+        target        = tParams.target;
+        throwingAngle = tParams.throwAngle;
+        m_Rigidbody   = GetComponent<Rigidbody>();
+        gravity       = Mathf.Abs(Physics.gravity.y);
+        StartCoroutine(nameof(ThrowGrenade));
+    }
+
+
+    void OnDrawGizmos()
+    {
+        var restoreColor = GUI.color;
+        GUI.color = Color.green;
+        Handles.Label(gameObject.transform.position,
+                      $"IsPlaying = {m_ParticleSystem.isPlaying}\nTimer = {timer}\nEmitting = {!stopping}");
+        GUI.color = restoreColor;
+    }
+
+
+    IEnumerator RemoveGrenade()
     {
         m_ParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         Debug.Log("Stopping grenade particle effect...");
@@ -80,13 +79,13 @@ public class SmokeGrenade : MonoBehaviour
     }
 
 
-    private IEnumerator ThrowGrenade()
+    IEnumerator ThrowGrenade()
     {
         Debug.Log("Throwing projectile...");
         Debug.Log($"Gravity: {Physics.gravity}({gravity})");
 
-        // Short delay added before Projectile is thrown
-        //yield return new WaitForSeconds(1.5f);
+
+        // yield return new WaitForSeconds(1.5f); // Short delay added before Projectile is thrown
 
         var projectilePosition = transform.position;
         Debug.Log($"Current position: {projectilePosition}");

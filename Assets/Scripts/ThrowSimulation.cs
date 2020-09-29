@@ -4,11 +4,10 @@ using System.Collections;
 
 public class ThrowSimulation : MonoBehaviour
 {
-    public Transform target;
-    public float firingAngle = 45.0f;
-    public float gravity = 9.8f;
-
-    public Transform projectile;
+    public  Transform target;
+    public  float     firingAngle = 45.0f;
+    public  float     gravity     = 9.8f;
+    public  Transform projectile;
     private Transform myTransform;
 
 
@@ -27,7 +26,7 @@ public class ThrowSimulation : MonoBehaviour
         var projectilePosition = projectile.position = myTransform.position + new Vector3(0, 0.0f, 0);
 
         // Calculate distance to target
-        var targetPosition = target.position;
+        var   targetPosition = target.position;
         float targetDistance = Vector3.Distance(projectile.position, targetPosition);
 
         // Calculate the velocity needed to throw the object to the target at specified angle.
@@ -37,20 +36,17 @@ public class ThrowSimulation : MonoBehaviour
         float vx = Mathf.Sqrt(projectileVelocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
         float vy = Mathf.Sqrt(projectileVelocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
 
-        // Calculate flight time.
+        // Calculate flight time
         float flightDuration = targetDistance / vx;
 
-        // Rotate projectile to face the target.
+        // Rotate projectile to face the target
         projectile.rotation = Quaternion.LookRotation(targetPosition - projectilePosition);
 
         float elapseTime = 0;
-
         while (elapseTime < flightDuration)
         {
             projectile.Translate(0, (vy - (gravity * elapseTime)) * Time.deltaTime, vx * Time.deltaTime);
-
             elapseTime += Time.deltaTime;
-
             yield return null;
         }
     }
