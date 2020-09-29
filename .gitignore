@@ -25,3 +25,4 @@ sysinfo.txt
 
 # Self-generated files
 Logs/
+*.log

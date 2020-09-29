@@ -5,5 +5,6 @@ using UnityEngine.PlayerLoop;
 
 public class Global
 {
+    // TODO: Use Databox to handle global data. 
     public PlayerData playerData = new PlayerData(100);
 }

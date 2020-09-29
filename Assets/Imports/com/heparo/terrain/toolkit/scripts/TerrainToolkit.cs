@@ -583,7 +583,7 @@ public class TerrainToolkit : MonoBehaviour {
 			terData.SetHeights(Px, Py, heightMap);
 		}
 		catch(System.Exception e){
-		 	Debug.LogError("A brush error occurred : "+e);
+		 	Debug.LogError($"A brush error occurred : {e}");
 		}
 	}
 	
@@ -645,7 +645,7 @@ public class TerrainToolkit : MonoBehaviour {
 			terData.SetHeights(0, 0, heightMap);
 		}
 		catch(System.Exception e){
-			Debug.LogError("An error occurred : "+e);
+			Debug.LogError($"An error occurred : {e}");
 		}
 		
 	}
@@ -1901,7 +1901,7 @@ public class TerrainToolkit : MonoBehaviour {
 			heightMapData = null;
 			slopeMapData = null;
 			splatMapData = null;
-			Debug.LogError("An error occurred : "+e);
+			Debug.LogError($"An error occurred : {e}");
 			
 		}
 		
@@ -1915,7 +1915,8 @@ public class TerrainToolkit : MonoBehaviour {
 	public void BuildPaths(){
 		
 		layersPath = Application.dataPath + Path.DirectorySeparatorChar + TOOLKIT_LAYERS_FOLDER + Path.DirectorySeparatorChar + gameObject.name + TERRAIN_LAYERS_FOLDER ;
-		assetPath = "Assets" + Path.DirectorySeparatorChar + TOOLKIT_LAYERS_FOLDER + Path.DirectorySeparatorChar + gameObject.name + TERRAIN_LAYERS_FOLDER + Path.DirectorySeparatorChar ;
+		assetPath =
+			$"Assets{Path.DirectorySeparatorChar}{TOOLKIT_LAYERS_FOLDER}{Path.DirectorySeparatorChar}{gameObject.name}{TERRAIN_LAYERS_FOLDER}{Path.DirectorySeparatorChar}";
 		System.IO.Directory.CreateDirectory(layersPath);
 		
 	}
@@ -2930,7 +2931,7 @@ public class TerrainToolkit : MonoBehaviour {
 						
 		}
 		catch(System.Exception e){
-			Debug.LogError("An error occurred : "+e);
+			Debug.LogError($"An error occurred : {e}");
 		}
 			
 	}
@@ -2968,7 +2969,7 @@ public class TerrainToolkit : MonoBehaviour {
 			
 		}
 		catch(System.Exception e){
-			Debug.LogError("An error occurred : "+e);
+			Debug.LogError($"An error occurred : {e}");
 		}
 			
 	}
@@ -3038,7 +3039,7 @@ public class TerrainToolkit : MonoBehaviour {
 			
 		}
 		catch(System.Exception e){
-			Debug.LogError("An error occurred : "+e);
+			Debug.LogError($"An error occurred : {e}");
 		}
 			
 	}

@@ -1,51 +1,54 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     // Variables
-    public float turnSmoothing = 15f; // A smoothing value for turning the player
-    public float jumpSpeed = 1f; // Player jump speed
+    public float      turnSmoothing = 15f; // A smoothing value for turning the player
+    public float      jumpSpeed     = 1f;  // Player jump speed
     public GameObject grenadeObject;
-    public float grenadeTime = 3f;
-    public float throwAngle = 45f;
+    public float      grenadeTime = 3f;
+    public float      throwAngle  = 45f;
 
-    private Animator m_Animator; // Reference to the animator component
-    private Rigidbody m_Rigidbody;
-    private Vector3 m_Movement;
-    private Quaternion m_Rotation = Quaternion.identity;
+    private Animator   m_Animator; // Reference to the animator component
+    private Rigidbody  m_Rigidbody;
+    private Vector3    m_Movement;
+    private Quaternion m_Rotation       = Quaternion.identity;
     private Quaternion m_TargetRotation = Quaternion.identity;
-    private Vector3 m_ThrowDirection;
-    private Collider m_Collider;
-    private Camera cam;
+    private Vector3    m_ThrowDirection;
+    private Collider   m_Collider;
+    private Camera     cam;
+    private bool       isGrounded;
+    private float      timer;
+    private bool       canThrow = true;
+    private float      raycastDist;
 
-    private bool isGrounded;
-    private float timer;
-    private bool canThrow = true;
-    private float raycastDist = 0f;
+    private static readonly int Speed  = Animator.StringToHash("Speed");
+    private static readonly int Aim    = Animator.StringToHash("Aim");
+    private static readonly int Attack = Animator.StringToHash("Attack");
+    private static readonly int Crouch = Animator.StringToHash("Crouch");
 
 
     // Functions
     void Awake()
     {
-        m_Animator = GetComponent<Animator>();
+        m_Animator  = GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
-        m_Collider = GetComponent<Collider>();
-        cam = Camera.main;
+        m_Collider  = GetComponent<Collider>();
     }
+
+
+    void Start() { cam = GameObject.FindWithTag("CharacterCamera").GetComponent<Camera>(); }
+
 
     void FixedUpdate()
     {
         // Cache the inputs
         float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float vertical   = Input.GetAxis("Vertical");
 
         // Set player animation state
-        bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
-        bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
+        bool  hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
+        bool  hasVerticalInput   = !Mathf.Approximately(vertical,   0f);
         float speed;
 
         if ((hasHorizontalInput || hasVerticalInput) && (Input.GetKey("left shift") || Input.GetKey("right shift")))
@@ -61,18 +64,19 @@ public class PlayerController : MonoBehaviour
             speed = 0f; // Standing
         }
 
-        bool isAiming = Input.GetMouseButton(1);
+        bool isAiming    = Input.GetMouseButton(1);
         bool isAttacking = Input.GetMouseButton(0);
         bool isCrouching = (Input.GetKey("left ctrl") || Input.GetKey("right ctrl"));
 
-        m_Animator.SetFloat("Speed", speed);
-        m_Animator.SetBool("Aim", isAiming);
-        m_Animator.SetBool("Attack", isAttacking);
-        m_Animator.SetBool("Crouch", isCrouching);
+        m_Animator.SetFloat(Speed, speed);
+        m_Animator.SetBool(Aim,    isAiming);
+        m_Animator.SetBool(Attack, isAttacking);
+        m_Animator.SetBool(Crouch, isCrouching);
 
         // Jumping
         if (Input.GetKey("space") && isGrounded)
         {
+            // TODO: Multiply jump speed by gravity for easier jump height control
             m_Rigidbody.velocity += jumpSpeed * Vector3.up;
 
             isGrounded = false;
@@ -81,92 +85,87 @@ public class PlayerController : MonoBehaviour
         // Weapons
         // TODO: Turn player when aiming and shooting
         if (Input.GetKey("g") && canThrow)
-        {
-            canThrow = false;
-            timer = 0f;
+        { // TODO: Move grenade throwing logic to a function
+            canThrow         = false;
+            timer            = 0f;
             m_ThrowDirection = cam.transform.forward;
             m_ThrowDirection.Normalize();
             Vector3 throwStart = gameObject.transform.position + Vector3.up;
 
-            GameObject grenade = (GameObject) Instantiate(grenadeObject, throwStart, Quaternion.identity);
+            GameObject grenade = Instantiate(grenadeObject, throwStart, Quaternion.identity);
+            // Player ignores collisions with grenades
             Physics.IgnoreCollision(m_Collider, grenade.GetComponent<Collider>());
-//            grenade.GetComponent<Rigidbody>().velocity = transform.TransformDirection(m_ThrowDirection * throwVelocity);
+            // grenade.GetComponent<Rigidbody>().velocity = transform.TransformDirection(m_ThrowDirection * throwVelocity);
 
-            // TODO: Make throw target raycast ignore player collisions
             var camTransform = cam.transform;
+            m_Collider.enabled = false; // Disable player collider during grenade targeting
             Ray ray = new Ray(camTransform.position, camTransform.forward);
             Physics.Raycast(ray, out var raycastHit);
-
+            m_Collider.enabled = true; // Reenable player collider
             var m = new ThrowParameters(raycastHit.point, throwAngle);
             grenade.BroadcastMessage("Throw", m);
 
-//            Debug.DrawRay(throwStart, m_ThrowDirection, Color.magenta, 3f);
+            Debug.DrawRay(throwStart, m_ThrowDirection, Color.red, 5f);
+            Debug.DrawLine(throwStart, raycastHit.point, Color.magenta, 5f);
         }
 
         MovementManagement(horizontal, vertical);
     }
 
 
-    void OnGUI()
-    {
-        GUI.Label(new Rect(0, 0, 1000, 50), "Distance to object: " + raycastDist);
-    }
+    void OnGUI() { GUI.Label(new Rect(0, 0, 1000, 50), $"Distance to target: {raycastDist}"); }
 
 
     void OnDrawGizmos()
     {
-        var camTransform = cam.transform;
-        var camPosition = camTransform.position;
-        Vector3 direction = camTransform.forward;
-        Ray ray = new Ray(camPosition, direction);
-        Debug.DrawRay(camPosition, direction);
-
-        m_Collider.enabled = false; // Prevent the raycast from colliding with the player object
-        if (Physics.Raycast(ray, out var raycastHit))
+        if (!(cam is null))
         {
-            raycastDist = raycastHit.distance;
-            Vector3 p = camTransform.TransformDirection(Vector3.forward) * raycastHit.distance;
-            Debug.DrawRay(camPosition, p, Color.yellow);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(raycastHit.point, 0.1f);
-        }
+            var camTransform = cam.transform;
+            var camPosition  = camTransform.position;
 
-        m_Collider.enabled = true; // Reenable the player collider after the raycast
+            m_Collider.enabled = false; // Prevent the raycast from colliding with the player object
+            Vector3 direction = camTransform.forward;
+            Ray     ray       = new Ray(camPosition, direction);
+            Debug.DrawRay(camPosition, direction);
+            if (Physics.Raycast(ray, out var raycastHit))
+            {
+                raycastDist = raycastHit.distance;
+                Vector3 p = camTransform.TransformDirection(Vector3.forward) * raycastHit.distance;
+                Debug.DrawRay(camPosition, p, Color.yellow);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(raycastHit.point, 0.1f);
+            }
+
+            m_Collider.enabled = true; // Reenable the player collider after the raycast
+        }
     }
 
 
     void Update()
     {
         timer += 1 * Time.deltaTime;
-
-        if (timer >= grenadeTime)
-        {
-            canThrow = true;
-        }
-    }
-
-    void OnCollisionStay()
-    {
-        isGrounded = true;
+        if (timer >= grenadeTime) { canThrow = true; }
     }
 
 
-    /////////////////////////////////////////////CHARACTER MOVEMENT/////////////////////////////////////////
+    void OnCollisionStay() { isGrounded = true; }
+
+
+    ///////////////////////////////////////////// CHARACTER MOVEMENT /////////////////////////////////////////
+
 
     void MovementManagement(float horizontal, float vertical)
     {
         // If there is some axis input...
-        if (horizontal != 0f || vertical != 0f)
-        {
-            Rotating(horizontal, vertical);
-        }
+        if (horizontal != 0f || vertical != 0f) { Rotating(horizontal, vertical); }
     }
+
 
     void Rotating(float horizontal, float vertical)
     {
         // Create a new vector of the horizontal and vertical inputs
         m_Movement = new Vector3(horizontal, 0f, vertical);
-        m_Movement = Camera.main.transform.TransformDirection(m_Movement);
+        if (!(cam is null)) m_Movement = cam.transform.TransformDirection(m_Movement);
         m_Movement.y = 0.0f;
         m_Movement.Normalize();
 
@@ -174,9 +173,9 @@ public class PlayerController : MonoBehaviour
         m_TargetRotation = Quaternion.LookRotation(m_Movement, Vector3.up);
 
         // Create a rotation that is an increment closer to the target rotation from the player's rotation
-        m_Rotation = Quaternion.Lerp(GetComponent<Rigidbody>().rotation, m_TargetRotation,
-            turnSmoothing * Time.deltaTime);
+        m_Rotation = Quaternion.Lerp(m_Rigidbody.rotation, m_TargetRotation, turnSmoothing * Time.deltaTime);
     }
+
 
     void OnAnimatorMove()
     {
