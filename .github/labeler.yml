@@ -2,6 +2,6 @@
 repo:
   - ./*
 
-scripting:
-  - *.cs
+scripting: 
+  any: ['*.cs']
   

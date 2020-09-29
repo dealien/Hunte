@@ -190,7 +190,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064276816070611405}
-  m_LocalRotation: {x: 0.039796554, y: -0.0062857927, z: -0.0002502726, w: -0.999188}
+  m_LocalRotation: {x: -0.039796554, y: 0.0062857918, z: 0.00025035613, w: 0.99918807}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -421,7 +421,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3507442049327362558}
-  m_LocalRotation: {x: -0.0034748355, y: 0.006290739, z: 0.000021619433, w: 0.9999742}
+  m_LocalRotation: {x: -0.003474834, y: 0.00629074, z: 0.000021859869, w: 0.9999742}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -570,7 +570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowDebugText: 0
-  m_ShowCameraFrustum: 1
+  m_ShowCameraFrustum: 0
   m_IgnoreTimeScale: 1
   m_WorldUpOverride: {fileID: 0}
   m_UpdateMethod: 2
@@ -618,7 +618,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5159325750690388478}
-  m_LocalRotation: {x: -0.021942299, y: 0.0052333926, z: -0.048253145, w: 0.9985804}
+  m_LocalRotation: {x: -0.021663275, y: 0.0062893033, z: 0.00013628231, w: 0.99974555}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1176,7 +1176,7 @@ GameObject:
   - component: {fileID: 7022994613283257242}
   m_Layer: 0
   m_Name: Soldier
-  m_TagString: Untagged
+  m_TagString: CameraIgnore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2269,6 +2269,7 @@ GameObject:
   - component: {fileID: 2226655970726622426}
   - component: {fileID: 1396254709338599766}
   - component: {fileID: 1744052038124112478}
+  - component: {fileID: 1477133982206906207}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2378,6 +2379,18 @@ MonoBehaviour:
   rightGunBone: {fileID: 7022994613294983848}
   leftGunBone: {fileID: 7022994613294983816}
   arsenal: []
+--- !u!114 &1477133982206906207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7022994613294757690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 316292b2557b6344cbc9f19b156abb33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7050844243252657001
 GameObject:
   m_ObjectHideFlags: 0

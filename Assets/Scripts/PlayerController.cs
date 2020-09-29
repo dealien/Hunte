@@ -122,11 +122,12 @@ public class PlayerController : MonoBehaviour
     {
         var camTransform = cam.transform;
         var camPosition = camTransform.position;
+    
+        m_Collider.enabled = false; // Prevent the raycast from colliding with the player object
+        
         Vector3 direction = camTransform.forward;
         Ray ray = new Ray(camPosition, direction);
         Debug.DrawRay(camPosition, direction);
-    
-        m_Collider.enabled = false; // Prevent the raycast from colliding with the player object
         if (Physics.Raycast(ray, out var raycastHit))
         {
             raycastDist = raycastHit.distance;
