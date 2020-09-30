@@ -16,22 +16,26 @@ namespace RadicalForge.Blockout
     [ExecuteInEditMode]
     public class BlockoutHelper : MonoBehaviour
     {
-        public SectionID initialBlockoutSection;
-        public bool ReapplyMaterialTheme = true;
-        private bool reapplyMaterialThemeInternal = false;
-        [SerializeField] private bool IsTriAsset = false;
-        private bool valid = true;
-        private bool locked = false;
-        private Vector3 lockedPosition;
-        private Quaternion lockedRotation;
-        public bool Locked { get { return locked; } }
-        private Mesh mesh;
+        public                   SectionID  initialBlockoutSection;
+        public                   bool       ReapplyMaterialTheme         = true;
+        private                  bool       reapplyMaterialThemeInternal = false;
+        [SerializeField] private bool       IsTriAsset                   = false;
+        private                  bool       valid                        = true;
+        private                  bool       locked                       = false;
+        private                  Vector3    lockedPosition;
+        private                  Quaternion lockedRotation;
+
+        public bool Locked
+        {
+            get { return locked; }
+        }
+
+        private Mesh    mesh;
         private Color[] colors;
-        
+
 
         void Start()
         {
-
             if (Application.isEditor && !Application.isPlaying)
             {
                 if (!reapplyMaterialThemeInternal)
@@ -39,18 +43,19 @@ namespace RadicalForge.Blockout
                 else
                     ReapplyMaterialTheme = reapplyMaterialThemeInternal;
 
-                if(transform.parent)
+                if (transform.parent)
                 {
                     if (transform.parent.GetComponent<BlockoutSection>())
-                    return;
+                        return;
                 }
 
                 GameObject rootObject = GameObject.Find("Blockout");
                 if (rootObject)
                 {
                     var parents = rootObject.GetComponentsInChildren<BlockoutSection>()
-                        .Where(x => x.transform.parent == rootObject.transform)
-                        .Where(x => x.Section == initialBlockoutSection).Select(x => x.transform).ToArray();
+                                            .Where(x => x.transform.parent == rootObject.transform)
+                                            .Where(x => x.Section == initialBlockoutSection).Select(x => x.transform)
+                                            .ToArray();
                     if (parents.Length > 0)
                     {
                         Transform targetParent = parents.First();
@@ -58,12 +63,10 @@ namespace RadicalForge.Blockout
                             transform.SetParent(targetParent);
                     }
                 }
-                else
-                {
-                    valid = false;
-                }
+                else { valid = false; }
             }
         }
+
 
         void Update()
         {
@@ -71,8 +74,8 @@ namespace RadicalForge.Blockout
             {
                 if (!name.Contains(" (Tri-Planar)") && IsTriAsset)
                 {
-                    name += " (Tri-Planar)";
-                    ReapplyMaterialTheme = true;
+                    name                 += " (Tri-Planar)";
+                    ReapplyMaterialTheme =  true;
                 }
             }
 
@@ -83,11 +86,12 @@ namespace RadicalForge.Blockout
             }
         }
 
+
         public void SetLock(bool value)
         {
             Mesh original = GetComponent<MeshFilter>().sharedMesh;
-            mesh = Instantiate(original);
-            mesh.name = original.name;
+            mesh                            = Instantiate(original);
+            mesh.name                       = original.name;
             GetComponent<MeshFilter>().mesh = mesh;
 
             colors = new Color[mesh.vertices.Length];
@@ -110,13 +114,14 @@ namespace RadicalForge.Blockout
             mesh.colors = colors;
         }
 
+
         public void HideLockedState()
         {
             if (locked)
             {
                 Mesh original = GetComponent<MeshFilter>().sharedMesh;
-                mesh = Instantiate(original);
-                mesh.name = original.name;
+                mesh                            = Instantiate(original);
+                mesh.name                       = original.name;
                 GetComponent<MeshFilter>().mesh = mesh;
 
                 colors = new Color[mesh.vertices.Length];
@@ -124,19 +129,20 @@ namespace RadicalForge.Blockout
 
                 for (int i = 0; i < mesh.vertices.Length; i++)
                     colors[i] = Color.red;
-                
+
 
                 mesh.colors = colors;
             }
         }
+
 
         public void ShowLockedState()
         {
             if (locked)
             {
                 Mesh original = GetComponent<MeshFilter>().sharedMesh;
-                mesh = Instantiate(original);
-                mesh.name = original.name;
+                mesh                            = Instantiate(original);
+                mesh.name                       = original.name;
                 GetComponent<MeshFilter>().mesh = mesh;
 
                 colors = new Color[mesh.vertices.Length];
@@ -149,19 +155,16 @@ namespace RadicalForge.Blockout
                 mesh.colors = colors;
             }
         }
-
     }
+
 
 #else
-
-    public class BlockoutHelper : MonoBehaviour
-    {
-        void Start()
-        {
-            Destroy(this);
-        }
-    }
-
+    // public class BlockoutHelper : MonoBehaviour
+    // {
+    //     void Start()
+    //     {
+    //         Destroy(this);
+    //     }
+    // }
 #endif
-
 }
