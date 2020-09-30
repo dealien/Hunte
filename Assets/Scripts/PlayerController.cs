@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (!(cam is null))
+        if (!(cam is null) && cam)
         {
             var camTransform = cam.transform;
             var camPosition  = camTransform.position;

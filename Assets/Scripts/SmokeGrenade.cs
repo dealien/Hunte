@@ -21,10 +21,11 @@ public class SmokeGrenade : MonoBehaviour
     void Start()
     {
         m_ParticleSystem = smokeObject.GetComponent<ParticleSystem>();
+        m_Rigidbody      = GetComponent<Rigidbody>();
         var m = m_ParticleSystem.main;
         m.startDelay = fuseTime;
         m.duration   = smokeDuration;
-        m_Rigidbody  = GetComponent<Rigidbody>();
+        m_ParticleSystem.Play();
     }
 
 
